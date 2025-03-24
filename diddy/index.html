@@ -47,7 +47,14 @@
             color: #b0b0b0;
             font-size: 12px;
             font-family: 'Courier New', monospace;
-            display: none; /* Initially hidden */
+            display: block; /* Always show the timestamp */
+        }
+        .note {
+            margin-top: 10px;
+            color: #b0b0b0;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            display: block; /* Always show this note */
         }
         .fullscreen-btn {
             position: absolute;
@@ -88,26 +95,56 @@
                                    EXIF.getTag(this, "CreateDate") ||
                                    EXIF.getTag(this, "DateTime");
 
-                    console.log("Extracted date:", exifDate);
+                    let timestampElem = document.querySelector(".timestamp");
 
                     if (exifDate) {
                         let formattedDate = formatExifDate(exifDate);
-                        let timestampElem = document.querySelector(".timestamp");
                         timestampElem.textContent = formattedDate;
-                        timestampElem.style.display = "block"; // Show timestamp if found
                         console.log("Formatted date set:", formattedDate);
                     } else {
-                        console.log("No valid EXIF timestamp found.");
+                        console.log("No valid EXIF timestamp found. Using default timestamp.");
+                        timestampElem.textContent = "24/03/'25"; // Default timestamp
                     }
                 });
             };
+
+            // Handle the optional note to detect links, emails, or phone numbers
+            const noteElem = document.querySelector(".note");
+            if (noteElem) {
+                noteElem.innerHTML = detectLinks(noteElem.innerHTML); // Process the content
+            }
         });
 
         // Function to format EXIF date to DD/MM/'YY
         function formatExifDate(exifDate) {
             let parts = exifDate.split(" "); // Split into date and time
             let dateParts = parts[0].split(":"); // Extract YYYY:MM:DD
-            return `${dateParts[2]}/${dateParts[1]}/'${dateParts[0].slice(-2)}`;
+            return `${dateParts[2]}/${dateParts[1]}/'${dateParts[0].slice(-2)} ${parts[1]}`;
+        }
+
+        // Function to detect and linkify URLs, emails, and phone numbers
+        function detectLinks(text) {
+            // Regex patterns for URLs, emails, and phone numbers
+            const urlPattern = /(https?:\/\/[^\s]+)/g;
+            const emailPattern = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+            const phonePattern = /(\+?[0-9]{1,4}[.\-\s]?)?(\(?[0-9]{1,3}\)?[.\-\s]?)?[0-9]{1,4}[.\-\s]?[0-9]{1,4}[.\-\s]?[0-9]{1,4}/g;
+
+            // Replace URLs with <a> tags
+            text = text.replace(urlPattern, function (url) {
+                return `<a href="${url}" target="_blank">${url}</a>`;
+            });
+
+            // Replace emails with <a> tags
+            text = text.replace(emailPattern, function (email) {
+                return `<a href="mailto:${email}">${email}</a>`;
+            });
+
+            // Replace phone numbers with <a> tags (tel: protocol)
+            text = text.replace(phonePattern, function (phone) {
+                return `<a href="tel:${phone}">${phone}</a>`;
+            });
+
+            return text;
         }
     </script>
 </head>
@@ -115,6 +152,12 @@
     <div class="container">
         <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
         <img src="https://host.kebaab.eu/diddy/1458b5b4-a344-4bd2-8079-43d14b26edcf.jpg" alt="Displayed Image" class="image">
+        
+        <!-- Optional static note that will always show -->
+        <div class="note">
+            https://r.kebaab.eu/voyo-diddy
+        </div>
+
         <div class="timestamp"></div>
     </div>
 </body>
