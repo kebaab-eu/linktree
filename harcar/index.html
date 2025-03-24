@@ -5,15 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Discord Embed Meta Tags -->
-    <meta property="og:title" content="Img - Custom Backhalf">
+    <meta property="og:title" content="Img - <?php echo isset($_GET['path']) ? htmlspecialchars($_GET['path']) : 'default'; ?>">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://host.kebaab.eu/harcar/">
+    <meta property="og:url" content="https://host.kebaab.eu/<?php echo isset($_GET['path']) ? htmlspecialchars($_GET['path']) : ''; ?>">
     <meta property="og:image" content="https://host.kebaab.eu/harcar/harcar.jpg">
+    <meta property="og:description" content="harcar lul">
     <meta name="theme-color" content="#fc3c25">
+    
+    <!-- Fallback for non-PHP servers -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const pathParam = urlParams.get('path') || window.location.pathname.replace(/^\//, '');
+        document.write(`
+            <meta property="og:title" content="Img - ${pathParam.replace(/\//g, ' / ')}">
+            <meta property="og:url" content="${window.location.href}">
+        `);
+    </script>
     
     <title>Img</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
     <style>
+        /* Keep your existing CSS styles */
         * {
             margin: 0;
             padding: 0;
