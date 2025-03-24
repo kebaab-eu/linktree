@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Img</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
     <style>
         * {
             margin: 0;
@@ -46,6 +47,7 @@
             color: #b0b0b0;
             font-size: 12px;
             font-family: 'Courier New', monospace;
+            display: none; /* Initially hidden */
         }
         .fullscreen-btn {
             position: absolute;
@@ -68,19 +70,40 @@
             // Set the document title dynamically
             const urlPath = window.location.pathname.substring(1);
             document.title = "Img - " + urlPath;
-            
+
             // Fullscreen button functionality
             document.getElementById("fullscreenBtn").addEventListener("click", function () {
                 window.open(document.querySelector(".image").src, "_blank");
             });
+
+            // Extract EXIF data from the image
+            const img = document.querySelector(".image");
+            img.onload = function () {
+                EXIF.getData(img, function () {
+                    let exifDate = EXIF.getTag(this, "DateTimeOriginal");
+                    if (exifDate) {
+                        let formattedDate = formatExifDate(exifDate);
+                        let timestampElem = document.querySelector(".timestamp");
+                        timestampElem.textContent = formattedDate;
+                        timestampElem.style.display = "block"; // Show timestamp if found
+                    }
+                });
+            };
         });
+
+        // Function to format EXIF date to DD/MM/'YY
+        function formatExifDate(exifDate) {
+            let parts = exifDate.split(" "); // Split into date and time
+            let dateParts = parts[0].split(":"); // Extract YYYY:MM:DD
+            return `${dateParts[2]}/${dateParts[1]}/'${dateParts[0].slice(-2)}`;
+        }
     </script>
 </head>
 <body>
     <div class="container">
         <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
         <img src="https://host.kebaab.eu/djapl/!vajco.png" alt="Displayed Image" class="image">
-        <div class="timestamp">12/04/'25</div>
+        <div class="timestamp"></div>
     </div>
 </body>
 </html>
