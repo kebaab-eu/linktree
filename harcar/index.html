@@ -90,47 +90,51 @@
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Set the document title dynamically
-            const urlPath = window.location.pathname.substring(1);
-            document.title = "Img - " + urlPath;
-
-            console.log("Document loaded. Path:", urlPath);
-
-            // Fullscreen button functionality
-            document.getElementById("fullscreenBtn").addEventListener("click", function () {
-                window.open(document.querySelector(".image").src, "_blank");
-            });
-
-            // Extract EXIF data from the image
-            const img = document.querySelector(".image");
-            img.onload = function () {
-                console.log("Image loaded. Attempting to read EXIF data...");
-                EXIF.getData(img, function () {
-                    console.log("EXIF data retrieved:", this);
-                    let exifDate = EXIF.getTag(this, "DateTimeOriginal") ||
-                                   EXIF.getTag(this, "CreateDate") ||
-                                   EXIF.getTag(this, "DateTime");
-
-                    let timestampElem = document.querySelector(".timestamp");
-
-                    if (exifDate) {
-                        let formattedDate = formatExifDate(exifDate);
-                        timestampElem.textContent = formattedDate;
-                        console.log("Formatted date set:", formattedDate);
-                    } else {
-                        console.log("No valid EXIF timestamp found. Using default timestamp.");
-                        timestampElem.textContent = "24/03/'25"; // Default timestamp
-                    }
-                });
-            };
-
-            // Handle the optional note to detect links, emails, or phone numbers
-            const noteElem = document.querySelector(".note");
-            if (noteElem) {
-                noteElem.innerHTML = detectLinks(noteElem.innerHTML); // Process the content
-            }
-        });
-
+	    // Get the path from the URL and remove the trailing slash if it exists
+	    let urlPath = window.location.pathname.substring(1);
+	    if (urlPath.endsWith("/")) {
+	        urlPath = urlPath.slice(0, -1);
+	    }
+	
+	    // Set the document title dynamically
+	    document.title = "Img - " + urlPath;
+	
+	    console.log("Document loaded. Path:", urlPath);
+	
+	    // Fullscreen button functionality
+	    document.getElementById("fullscreenBtn").addEventListener("click", function () {
+	        window.open(document.querySelector(".image").src, "_blank");
+	    });
+	
+	    // Extract EXIF data from the image
+	    const img = document.querySelector(".image");
+	    img.onload = function () {
+	        console.log("Image loaded. Attempting to read EXIF data...");
+	        EXIF.getData(img, function () {
+	            console.log("EXIF data retrieved:", this);
+	            let exifDate = EXIF.getTag(this, "DateTimeOriginal") ||
+	                           EXIF.getTag(this, "CreateDate") ||
+	                           EXIF.getTag(this, "DateTime");
+	
+	            let timestampElem = document.querySelector(".timestamp");
+	
+	            if (exifDate) {
+	                let formattedDate = formatExifDate(exifDate);
+	                timestampElem.textContent = formattedDate;
+	                console.log("Formatted date set:", formattedDate);
+	            } else {
+	                console.log("No valid EXIF timestamp found. Using default timestamp.");
+	                timestampElem.textContent = "24/03/'25"; // Default timestamp
+	            }
+	        });
+	    };
+	
+	    // Handle the optional note to detect links, emails, or phone numbers
+	    const noteElem = document.querySelector(".note");
+	    if (noteElem) {
+	        noteElem.innerHTML = detectLinks(noteElem.innerHTML); // Process the content
+	    }
+	});
         // Function to format EXIF date to DD/MM/'YY
         function formatExifDate(exifDate) {
             let parts = exifDate.split(" "); // Split into date and time
