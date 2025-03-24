@@ -12,9 +12,9 @@
             font-family: Arial, sans-serif;
         }
         body {
-            background: linear-gradient(45deg, #1a1a1a, #2b2b2b, #1a1a1a);
-            background-size: 200% 200%;
-            animation: gradientMove 5s infinite linear;
+            background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+            background-size: 400% 400%;
+            animation: gradientMove 10s infinite linear;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,7 +22,8 @@
         }
         @keyframes gradientMove {
             0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         .container {
             background: #121212;
@@ -42,8 +43,24 @@
             position: absolute;
             bottom: 10px;
             right: 10px;
-            color: #757575;
+            color: #b0b0b0;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+        }
+        .fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
             font-size: 14px;
+        }
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
         }
     </style>
     <script>
@@ -52,21 +69,18 @@
             const urlPath = window.location.pathname.substring(1);
             document.title = "Img - " + urlPath;
             
-            // Try to fetch metadata (this works only if the image metadata is accessible)
-            const img = document.querySelector(".image");
-            img.onload = function () {
-                if (img.naturalWidth > 0) { // Simple check to see if the image loads
-                    // Dummy metadata for testing since JS can't easily access EXIF data without libraries
-                    document.querySelector(".timestamp").textContent = "24/03/'25"; // Replace with actual EXIF data if available
-                }
-            };
+            // Fullscreen button functionality
+            document.getElementById("fullscreenBtn").addEventListener("click", function () {
+                window.open(document.querySelector(".image").src, "_blank");
+            });
         });
     </script>
 </head>
 <body>
     <div class="container">
-        <img src="https://host.kebaab.eu/djapl/!vajco.png" alt="img" class="image">
-        <div class="timestamp"></div>
+        <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
+        <img src="https://host.kebaab.eu/djapl/!vajco.png" alt="Displayed Image" class="image">
+        <div class="timestamp">12/04/'25</div>
     </div>
 </body>
 </html>
