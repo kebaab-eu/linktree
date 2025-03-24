@@ -83,11 +83,13 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Dynamic metadata configuration
-            const urlPath = window.location.pathname.substring(1);
+            const fullPath = window.location.pathname;
+            // Clean the path: remove first and last slashes but keep middle ones
+            const cleanPath = fullPath.replace(/^\/|\/$/g, ''); 
             const currentUrl = window.location.href;
             
-            // Update titles and metadata
-            document.title = `Img - ${urlPath}`;
+            // Update titles and metadata with cleaned path
+            document.title = `Img - ${cleanPath}`;
             document.querySelector('meta[property="og:title"]').content = document.title;
             document.querySelector('meta[property="og:url"]').content = currentUrl;
 
