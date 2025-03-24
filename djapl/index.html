@@ -80,7 +80,10 @@
             const img = document.querySelector(".image");
             img.onload = function () {
                 EXIF.getData(img, function () {
-                    let exifDate = EXIF.getTag(this, "DateTimeOriginal");
+                    let exifDate = EXIF.getTag(this, "DateTimeOriginal") ||
+                                   EXIF.getTag(this, "CreateDate") ||
+                                   EXIF.getTag(this, "DateTime");
+                
                     if (exifDate) {
                         let formattedDate = formatExifDate(exifDate);
                         let timestampElem = document.querySelector(".timestamp");
