@@ -87,10 +87,11 @@
         }
     </style>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Set the document title dynamically
-            const urlPath = window.location.pathname.substring(1);
-            document.title = "Img - " + urlPath;
+         document.addEventListener("DOMContentLoaded", function () {
+            // Set dynamic title without leading/trailing slashes
+            const rawPath = window.location.pathname;
+            const cleanPath = rawPath.replace(/^\/|\/$/g, ''); // Trim slashes
+            document.title = "Img - " + cleanPath;
 
             console.log("Document loaded. Path:", urlPath);
 
