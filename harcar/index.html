@@ -5,20 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Img</title>
     
-    <!-- Essential Open Graph Tags -->
+    <!-- Open Graph Tags (Discord Embed Control) -->
     <meta property="og:title" content="host.kebaab.eu" />
     <meta property="og:image" content="https://host.kebaab.eu/harcar/harcar.jpg" />
     <meta property="og:url" content="https://host.kebaab.eu/harcar/index.html" />
     <meta property="og:type" content="website" />
 
-    <!-- Minimal Twitter Card (for image sizing) -->
-    <meta name="twitter:card" content="summary_large_image">
-    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
         body {
             background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
@@ -45,6 +43,12 @@
         .image {
             width: 100%;
             border-radius: 8px;
+        }
+        .note {
+            margin-top: 10px;
+            color: #b0b0b0;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
         }
         .fullscreen-btn {
             position: absolute;
@@ -76,6 +80,8 @@
     <div class="container">
         <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
         <img src="https://host.kebaab.eu/harcar/harcar.jpg" alt="Image" class="image">
+        <!-- Website-only description -->
+        <div class="note">harcar lul</div>
     </div>
 </body>
 </html>
