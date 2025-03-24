@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Img</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+            background-size: 400% 400%;
+            animation: gradientMove 10s infinite linear;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .container {
+            background: #121212;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+        }
+        .image {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .timestamp {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #b0b0b0;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            display: none; /* Initially hidden */
+        }
+        .fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Set the document title dynamically
+            const urlPath = window.location.pathname.substring(1);
+            document.title = "Img - " + urlPath;
+
+            console.log("Document loaded. Path:", urlPath);
+
+            // Fullscreen button functionality
+            document.getElementById("fullscreenBtn").addEventListener("click", function () {
+                window.open(document.querySelector(".image").src, "_blank");
+            });
+
+            // Extract EXIF data from the image
+            const img = document.querySelector(".image");
+            img.onload = function () {
+                console.log("Image loaded. Attempting to read EXIF data...");
+                EXIF.getData(img, function () {
+                    console.log("EXIF data retrieved:", this);
+                    let exifDate = EXIF.getTag(this, "DateTimeOriginal") ||
+                                   EXIF.getTag(this, "CreateDate") ||
+                                   EXIF.getTag(this, "DateTime");
+
+                    console.log("Extracted date:", exifDate);
+
+                    if (exifDate) {
+                        let formattedDate = formatExifDate(exifDate);
+                        let timestampElem = document.querySelector(".timestamp");
+                        timestampElem.textContent = formattedDate;
+                        timestampElem.style.display = "block"; // Show timestamp if found
+                        console.log("Formatted date set:", formattedDate);
+                    } else {
+                        console.log("No valid EXIF timestamp found.");
+                    }
+                });
+            };
+        });
+
+        // Function to format EXIF date to DD/MM/'YY
+        function formatExifDate(exifDate) {
+            let parts = exifDate.split(" "); // Split into date and time
+            let dateParts = parts[0].split(":"); // Extract YYYY:MM:DD
+            return `${dateParts[2]}/${dateParts[1]}/'${dateParts[0].slice(-2)}`;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
+        <img src="https://host.kebaab.eu/diddy/Screenshot 2025-03-24 161732.png" alt="Displayed Image" class="image">
+        <div class="timestamp"></div>
+    </div>
+</body>
+</html>
