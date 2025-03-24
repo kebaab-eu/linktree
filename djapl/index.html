@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>img - djapl</title>
+    <title>Img</title>
     <style>
         * {
             margin: 0;
@@ -12,30 +12,61 @@
             font-family: Arial, sans-serif;
         }
         body {
-            background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+            background: linear-gradient(45deg, #1a1a1a, #2b2b2b, #1a1a1a);
+            background-size: 200% 200%;
+            animation: gradientMove 5s infinite linear;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
         .container {
-            background: #1c1c1c;
+            background: #121212;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             text-align: center;
             max-width: 500px;
             width: 100%;
+            position: relative;
         }
         .image {
             width: 100%;
             border-radius: 8px;
         }
+        .timestamp {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #757575;
+            font-size: 14px;
+        }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Set the document title dynamically
+            const urlPath = window.location.pathname.substring(1);
+            document.title = "Img - " + urlPath;
+            
+            // Try to fetch metadata (this works only if the image metadata is accessible)
+            const img = document.querySelector(".image");
+            img.onload = function () {
+                if (img.naturalWidth > 0) { // Simple check to see if the image loads
+                    // Dummy metadata for testing since JS can't easily access EXIF data without libraries
+                    document.querySelector(".timestamp").textContent = "24/03/'25"; // Replace with actual EXIF data if available
+                }
+            };
+        });
+    </script>
 </head>
 <body>
     <div class="container">
         <img src="https://host.kebaab.eu/djapl/!vajco.png" alt="img" class="image">
+        <div class="timestamp"></div>
     </div>
 </body>
 </html>
