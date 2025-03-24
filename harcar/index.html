@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Img</title>
     
-    <!-- Open Graph Tags (Discord Embed Control) -->
+    <!-- Open Graph Tags -->
     <meta property="og:title" content="host.kebaab.eu" />
     <meta property="og:image" content="https://host.kebaab.eu/harcar/harcar.jpg" />
     <meta property="og:url" content="https://host.kebaab.eu/harcar/index.html" />
@@ -25,7 +25,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
         @keyframes gradientMove {
             0% { background-position: 0% 50%; }
@@ -45,10 +45,11 @@
             border-radius: 8px;
         }
         .note {
-            margin-top: 10px;
+            margin-top: 15px;
             color: #b0b0b0;
-            font-size: 12px;
+            font-size: 14px;
             font-family: 'Courier New', monospace;
+            text-align: center;
         }
         .fullscreen-btn {
             position: absolute;
@@ -60,6 +61,82 @@
             padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
+            z-index: 1;
+        }
+        /* Hamburger Menu - Top Left */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            transition: 0.3s;
+        }
+        .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .menu-btn span {
+            width: 25px;
+            height: 2px;
+            background: white;
+            transition: 0.3s;
+        }
+        .menu {
+            position: fixed;
+            top: 60px;
+            left: 20px;
+            background: rgba(18, 18, 18, 0.95);
+            border-radius: 8px;
+            padding: 15px;
+            color: #b0b0b0;
+            display: none;
+            min-width: 220px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        .menu.active {
+            display: block;
+        }
+        .menu-section {
+            margin: 10px 0;
+        }
+        .menu h3 {
+            color: white;
+            font-size: 14px;
+            margin-bottom: 8px;
+            padding-left: 5px;
+        }
+        .menu a {
+            color: #b0b0b0;
+            text-decoration: none;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .separator {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 15px 0;
+        }
+        .copyright {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 15px;
+            text-align: center;
         }
     </style>
     <script>
@@ -73,14 +150,55 @@
             document.getElementById("fullscreenBtn").addEventListener("click", function () {
                 window.open(document.querySelector(".image").src, "_blank");
             });
+
+            // Menu functionality
+            const menuBtn = document.querySelector('.menu-btn');
+            const menu = document.querySelector('.menu');
+            
+            menuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', () => {
+                menu.classList.remove('active');
+            });
         });
     </script>
 </head>
 <body>
+    <!-- Hamburger Menu (Top Left) -->
+    <button class="menu-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    
+    <div class="menu">
+        <div class="menu-section">
+            <h3>Contact</h3>
+            <a href="mailto:contact@kebaab.eu">Email: contact@kebaab.eu</a>
+        </div>
+
+        <div class="menu-section">
+            <h3>Links</h3>
+            <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+            <a href="https://stats.uptimerobot.com/ibKX5Xk5Rd" target="_blank">Status</a>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="copyright">
+            2025 © kebaab.eu<br>
+            All rights reserved
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <div class="container">
         <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
         <img src="https://host.kebaab.eu/harcar/harcar.jpg" alt="Image" class="image">
-        <!-- Website-only description -->
         <div class="note">harcar lul</div>
     </div>
 </body>
