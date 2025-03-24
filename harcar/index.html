@@ -4,23 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Img</title>
-	
-    <!-- Discord and Open Graph Meta Tags -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://host.kebaab.eu/harcar/index.html">
-    <meta property="og:title" content="Img - harcar">
-    <meta property="og:description" content="harcar lul">
-    <meta property="og:image" content="https://host.kebaab.eu/harcar/harcar.jpg">
-    
-    <!-- Twitter Card Meta Tags -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://host.kebaab.eu/harcar/index.html">
-    <meta property="twitter:title" content="Img - harcar">
-    <meta property="twitter:description" content="harcar lul">
-    <meta property="twitter:image" content="https://host.kebaab.eu/harcar/harcar.jpg">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
-	
     <style>
         * {
             margin: 0;
@@ -59,22 +43,18 @@
         .timestamp {
             position: absolute;
             bottom: 10px;
-            left: 10px; /* Changed from right to left */
+            right: 10px;
             color: #b0b0b0;
             font-size: 12px;
             font-family: 'Courier New', monospace;
-            display: block;
+            display: block; /* Always show the timestamp */
         }
         .note {
-            position: absolute;
-            bottom: 10px;
-            right: 10px; /* Added positioning */
+            margin-top: 10px;
             color: #b0b0b0;
             font-size: 12px;
             font-family: 'Courier New', monospace;
-            display: block;
-            margin-top: 0; /* Removed previous margin-top */
-            max-width: 50%; /* Prevent overflow */
+            display: block; /* Always show this note */
         }
         .fullscreen-btn {
             position: absolute;
@@ -94,51 +74,47 @@
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-	    // Get the path from the URL and remove the trailing slash if it exists
-	    let urlPath = window.location.pathname.substring(1);
-	    if (urlPath.endsWith("/")) {
-	        urlPath = urlPath.slice(0, -1);
-	    }
-	
-	    // Set the document title dynamically
-	    document.title = "Img - " + urlPath;
-	
-	    console.log("Document loaded. Path:", urlPath);
-	
-	    // Fullscreen button functionality
-	    document.getElementById("fullscreenBtn").addEventListener("click", function () {
-	        window.open(document.querySelector(".image").src, "_blank");
-	    });
-	
-	    // Extract EXIF data from the image
-	    const img = document.querySelector(".image");
-	    img.onload = function () {
-	        console.log("Image loaded. Attempting to read EXIF data...");
-	        EXIF.getData(img, function () {
-	            console.log("EXIF data retrieved:", this);
-	            let exifDate = EXIF.getTag(this, "DateTimeOriginal") ||
-	                           EXIF.getTag(this, "CreateDate") ||
-	                           EXIF.getTag(this, "DateTime");
-	
-	            let timestampElem = document.querySelector(".timestamp");
-	
-	            if (exifDate) {
-	                let formattedDate = formatExifDate(exifDate);
-	                timestampElem.textContent = formattedDate;
-	                console.log("Formatted date set:", formattedDate);
-	            } else {
-	                console.log("No valid EXIF timestamp found. Using default timestamp.");
-	                timestampElem.textContent = "24/03/'25"; // Default timestamp
-	            }
-	        });
-	    };
-	
-	    // Handle the optional note to detect links, emails, or phone numbers
-	    const noteElem = document.querySelector(".note");
-	    if (noteElem) {
-	        noteElem.innerHTML = detectLinks(noteElem.innerHTML); // Process the content
-	    }
-	});
+            // Set the document title dynamically
+            const urlPath = window.location.pathname.substring(1);
+            document.title = "Img - " + urlPath;
+
+            console.log("Document loaded. Path:", urlPath);
+
+            // Fullscreen button functionality
+            document.getElementById("fullscreenBtn").addEventListener("click", function () {
+                window.open(document.querySelector(".image").src, "_blank");
+            });
+
+            // Extract EXIF data from the image
+            const img = document.querySelector(".image");
+            img.onload = function () {
+                console.log("Image loaded. Attempting to read EXIF data...");
+                EXIF.getData(img, function () {
+                    console.log("EXIF data retrieved:", this);
+                    let exifDate = EXIF.getTag(this, "DateTimeOriginal") ||
+                                   EXIF.getTag(this, "CreateDate") ||
+                                   EXIF.getTag(this, "DateTime");
+
+                    let timestampElem = document.querySelector(".timestamp");
+
+                    if (exifDate) {
+                        let formattedDate = formatExifDate(exifDate);
+                        timestampElem.textContent = formattedDate;
+                        console.log("Formatted date set:", formattedDate);
+                    } else {
+                        console.log("No valid EXIF timestamp found. Using default timestamp.");
+                        timestampElem.textContent = "24/03/'25"; // Default timestamp
+                    }
+                });
+            };
+
+            // Handle the optional note to detect links, emails, or phone numbers
+            const noteElem = document.querySelector(".note");
+            if (noteElem) {
+                noteElem.innerHTML = detectLinks(noteElem.innerHTML); // Process the content
+            }
+        });
+
         // Function to format EXIF date to DD/MM/'YY
         function formatExifDate(exifDate) {
             let parts = exifDate.split(" "); // Split into date and time
@@ -177,9 +153,12 @@
         <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
         <img src="https://host.kebaab.eu/harcar/harcar.jpg" alt="Displayed Image" class="image">
         
-        <!-- Note element moved after timestamp for better DOM order -->
+        <!-- Optional static note that will always show -->
+        <div class="note">
+            harcar lul
+        </div>
+
         <div class="timestamp"></div>
-        <div class="note">harcar lul</div>
     </div>
 </body>
 </html>
