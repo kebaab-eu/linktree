@@ -71,6 +71,8 @@
             const urlPath = window.location.pathname.substring(1);
             document.title = "Img - " + urlPath;
 
+            console.log("Document loaded. Path:", urlPath);
+
             // Fullscreen button functionality
             document.getElementById("fullscreenBtn").addEventListener("click", function () {
                 window.open(document.querySelector(".image").src, "_blank");
@@ -79,16 +81,23 @@
             // Extract EXIF data from the image
             const img = document.querySelector(".image");
             img.onload = function () {
+                console.log("Image loaded. Attempting to read EXIF data...");
                 EXIF.getData(img, function () {
+                    console.log("EXIF data retrieved:", this);
                     let exifDate = EXIF.getTag(this, "DateTimeOriginal") ||
                                    EXIF.getTag(this, "CreateDate") ||
                                    EXIF.getTag(this, "DateTime");
-                
+
+                    console.log("Extracted date:", exifDate);
+
                     if (exifDate) {
                         let formattedDate = formatExifDate(exifDate);
                         let timestampElem = document.querySelector(".timestamp");
                         timestampElem.textContent = formattedDate;
                         timestampElem.style.display = "block"; // Show timestamp if found
+                        console.log("Formatted date set:", formattedDate);
+                    } else {
+                        console.log("No valid EXIF timestamp found.");
                     }
                 });
             };
